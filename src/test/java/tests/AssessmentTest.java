@@ -12,7 +12,7 @@ import WebPages.ShopPage;
 
 
 public class AssessmentTest extends BaseTest{
-/*
+
 	@Test(description = "Test 1")
 	public void verifyMandatoryField() {
 		
@@ -99,7 +99,7 @@ public class AssessmentTest extends BaseTest{
 		
 	}
 	
-*/
+
 	@Test(description = "Test 3")
 	public void verifyTotalAmount() {
 		
