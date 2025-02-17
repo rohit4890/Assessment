@@ -7,75 +7,46 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class CartPage extends BasePage{
-
-String product;
 	
-	private By products = By.xpath("//td[1]//img//parent::td");
-	private By productPrice = By.xpath("//td[1]//img//parent::td[text()=\' "+product+"\']//parent::tr//td[2]");
-	private By totalProductPrice = By.xpath("//td[1]//img//parent::td[text()=\' "+product+"\']//parent::tr//td[4]");
-	private By total = By.xpath("//strong[contains(text(),'Total')]");
-	
-	
+	int counter = 0;
+	private By productName =  null;
+	private By productPrice = null;
+	private By productQty =   null;
+    private By productTotal = null;
+    private By cartTotal = By.className("total");
+    
+   	
 	public CartPage(WebDriver driver) {
 		super(driver);
 	}
+	
+	public boolean isElementDisplayedOnPage(String name) {
+		counter++;
+		productName = By.xpath("(//td//img)["+counter+"]");
+		return isElementDisplayedOnPage(productName);
+	}
+	
+	public double getSinglePrice() {
+		productPrice = By.xpath("(//td//img)["+counter+"]"+"//parent::td//parent::tr//td[2]");
+		String ProductPrice = waitForVisibility(productPrice).getText();
+		int index = ProductPrice.indexOf("$")+1;
+		String price = ProductPrice.substring(index);
+		return Double.parseDouble(price);
+	}
+	
+	public double getTotalProductPrice() {
+		productTotal = By.xpath("(//td//img)["+counter+"]"+"//parent::td//parent::tr//td[4]");
+		String ProductPrice = waitForVisibility(productTotal).getText();
+		int index = ProductPrice.indexOf("$")+1;
+		String price = ProductPrice.substring(index);
+		return Double.parseDouble(price);
+	}
+	
+	public double getCartTotal() {
 		
-	List<WebElement> getAllProduct() {
-		return waitForVisibilityList(products);
-	}
-	
-	WebElement getPriceField(String productName) {
-		product = productName;
-		productPrice = By.xpath("//td[1]//img//parent::td[text()=\' "+product+"\']//parent::tr//td[2]");
-		return waitForVisibility(productPrice);
-	}
-	
-	WebElement getTotalProductPriceField(String productName) {
-		product = productName;
-		totalProductPrice = By.xpath("//td[1]//img//parent::td[text()=\' "+product+"\']//parent::tr//td[4]");
-		return waitForVisibility(totalProductPrice);
-	}
-	
-	WebElement getTotalFieldOnCart() {
-		return waitForVisibility(total);
-	}
-
-	public boolean isProductAdded(String productName) {
-		
-		boolean isProductAdded = false;
-		List<WebElement> list = getAllProduct();
-		for (WebElement element : list) {
-		    if(element.getText().equalsIgnoreCase(productName)) {
-		    	isProductAdded = true;
-		    	break;
-		    }
-		}
-		return isProductAdded;
-	}
-	
-	public double getSingleProductPrice(String productName) {
-		
-		String amount = getPriceField(productName).getText();
-		int index = amount.indexOf("$")+1;
-		String amount1 = amount.substring(index);
-		double price = Double.parseDouble(amount1);
-		return price;
-	}
-	
-	public double getTotalProductAmount(String productName) {
-		
-		String amount = getTotalProductPriceField(productName).getText();
-		int index = amount.indexOf("$")+1;
-		String amount1 = amount.substring(index);
-		double price = Double.parseDouble(amount1);
-		return price;
-	}
-	
-	public double getTotalFromCartPage() {
-		String amount = getTotalFieldOnCart().getText();
-		int index = amount.indexOf(" ")+1;
-		String amount1 = amount.substring(index);
-		double price = Double.parseDouble(amount1);
-		return price;
+		String cartTotalTxt = waitForVisibility(cartTotal).getText();
+		String number = cartTotalTxt.replaceAll("[^0-9.]", "");
+        return Double.parseDouble(number);
+        
 	}
 }

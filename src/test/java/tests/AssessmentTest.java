@@ -12,7 +12,7 @@ import WebPages.ShopPage;
 
 
 public class AssessmentTest extends BaseTest{
-
+	
 	@Test(description = "Test 1")
 	public void verifyMandatoryField() {
 		
@@ -103,6 +103,14 @@ public class AssessmentTest extends BaseTest{
 	@Test(description = "Test 3")
 	public void verifyTotalAmount() {
 		
+		double singlePriceOnShopPage = 0.0;
+		double totalProductPriceOnShopPage = 0.0;
+		
+		double singlePriceOnCartPage = 0.0;
+		double totalProductPriceOnCartPage = 0.0;
+		
+		double totalAmount = 0.0;
+		
 		// Step 1: Verify Home page is open
 		HomePage homePage = parentPage.getInstanceOf(HomePage.class);
 		Assert.assertEquals(homePage.isHomePageOpened(), true);
@@ -110,31 +118,109 @@ public class AssessmentTest extends BaseTest{
 		
 		// Step 2: Navigate to Shop Page
 		homePage.clickShopTab();
+		extentTest.get().log(Status.PASS, "Shop Page is opened");
 		
 		// Step 3: Buy 2 Stuffed frog
 		ShopPage shopPage = parentPage.getInstanceOf(ShopPage.class);
 		shopPage.buyProduct("Stuffed Frog", 2);
-		// Step 3.1: Verify each and total price for the product
-		System.out.println("1 Stuff frog price"+ shopPage.getProductPrice());
-		System.out.println("2 Stuff frog price"+ shopPage.getTotalPriceForEachProduct());
 		
-
-		// Step 4: Buy 5 Fluffy Bunny
-		shopPage.buyProduct("Fluffy Bunny", 5);
-		// Step 4.1: Verify each and total price for the product
-		System.out.println("1 Fluffy Bunny"+ shopPage.getProductPrice());
-		System.out.println("5 Fluffy Bunny"+ shopPage.getTotalPriceForEachProduct());
-		
-		
-		// Step 5: Buy 3 Valentine Bear
-		shopPage.buyProduct("Valentine Bear", 3);
-		// Step 5.1: Verify each and total price for the product
-		System.out.println("1 Valentine Bear"+ shopPage.getProductPrice());
-		System.out.println("3 Valentine Bear"+ shopPage.getTotalPriceForEachProduct());
-		
-		// Step 6: Navigate to Cart
+		// Step 3.1: Navigate to Cart page
 		homePage.clickCartTab();
+		CartPage cartPage = parentPage.getInstanceOf(CartPage.class);
+		boolean isAddedToCart = cartPage.isElementDisplayedOnPage("Stuff Frog");
+		Assert.assertEquals(isAddedToCart, true);
+		extentTest.get().log(Status.PASS, "2 Stuff Frog are added to cart");
+		
+		// Step 3.2: Verify that prices match on cart page
+		singlePriceOnShopPage = shopPage.getProductPrice();
+		totalProductPriceOnShopPage = shopPage.getTotalPriceForEachProduct();
+		System.out.println("Shop Page: Stuff single price: "+singlePriceOnShopPage);
+		System.out.println("Shop Page: Stuff total price: "+totalProductPriceOnShopPage);
+		singlePriceOnCartPage = cartPage.getSinglePrice();
+		totalProductPriceOnCartPage = cartPage.getTotalProductPrice();
+		System.out.println("Cart Page: Stuff single price: "+singlePriceOnCartPage);
+		System.out.println("Cart Page: Stuff total price: "+totalProductPriceOnCartPage);
+		Assert.assertEquals(singlePriceOnShopPage, singlePriceOnCartPage);
+		Assert.assertEquals(totalProductPriceOnShopPage, totalProductPriceOnCartPage);
+		extentTest.get().log(Status.PASS, "Price Matched for Stuff Frog");
+		totalAmount = totalAmount + totalProductPriceOnCartPage;
+		// Resetting values
+		isAddedToCart = false;
+		singlePriceOnShopPage = 0.0;
+		totalProductPriceOnShopPage = 0.0;
+		singlePriceOnCartPage = 0.0;
+		totalProductPriceOnCartPage = 0.0;
 		
 		
+		//Step 4: Navigate to shop page
+		homePage.clickShopTab();
+		extentTest.get().log(Status.PASS, "Shop Page is opened");
+			
+		// Step 5: Buy 5 Fluffy Bunny
+		shopPage.buyProduct("Fluffy Bunny", 5);
+		
+		// Step 5.1: Navigate to Cart page
+		homePage.clickCartTab();
+		isAddedToCart = cartPage.isElementDisplayedOnPage("Fluffy Bunny");
+		Assert.assertEquals(isAddedToCart, true);
+		extentTest.get().log(Status.PASS, "5 Fluffy Bunny are added to cart");
+		
+		// Step 5.2: Verify that prices match on cart page
+		singlePriceOnShopPage = shopPage.getProductPrice();
+		totalProductPriceOnShopPage = shopPage.getTotalPriceForEachProduct();
+		System.out.println("Shop Page: Fluffy Bunny single price: "+singlePriceOnShopPage);
+		System.out.println("Shop Page: Fluffy Bunny total price: "+totalProductPriceOnShopPage);
+		singlePriceOnCartPage = cartPage.getSinglePrice();
+		totalProductPriceOnCartPage = cartPage.getTotalProductPrice();
+		System.out.println("Cart Page: Fluffy Bunny single price: "+singlePriceOnCartPage);
+		System.out.println("Cart Page: Fluffy Bunny total price: "+totalProductPriceOnCartPage);
+		Assert.assertEquals(singlePriceOnShopPage, singlePriceOnCartPage);
+		Assert.assertEquals(totalProductPriceOnShopPage, totalProductPriceOnCartPage);
+		extentTest.get().log(Status.PASS, "Price Matched for Fluffy Bunny");
+		totalAmount = totalAmount + totalProductPriceOnCartPage;
+		// Resetting values
+		isAddedToCart = false;
+		singlePriceOnShopPage = 0.0;
+		totalProductPriceOnShopPage = 0.0;
+		singlePriceOnCartPage = 0.0;
+		totalProductPriceOnCartPage = 0.0;
+		
+		//Step 6: Navigate to shop page
+		homePage.clickShopTab();
+		extentTest.get().log(Status.PASS, "Shop Page is opened");
+		
+		// Step 7: Buy 3 Valentine Bear
+		shopPage.buyProduct("Valentine Bear", 3);
+		
+		// Step 7.1: Navigate to Cart page
+		homePage.clickCartTab();
+		isAddedToCart = cartPage.isElementDisplayedOnPage("Valentine Bear");
+		Assert.assertEquals(isAddedToCart, true);
+		extentTest.get().log(Status.PASS, "3 Valentine Bear are added to cart");
+		
+		// Step 5.2: Verify that prices match on cart page
+		singlePriceOnShopPage = shopPage.getProductPrice();
+		totalProductPriceOnShopPage = shopPage.getTotalPriceForEachProduct();
+		System.out.println("Shop Page: Valentine Bear single price: "+singlePriceOnShopPage);
+		System.out.println("Shop Page: Valentine Beartotal price: "+totalProductPriceOnShopPage);
+		singlePriceOnCartPage = cartPage.getSinglePrice();
+		totalProductPriceOnCartPage = cartPage.getTotalProductPrice();
+		System.out.println("Cart Page: Valentine Bear single price: "+singlePriceOnCartPage);
+		System.out.println("Cart Page: Valentine Bear total price: "+totalProductPriceOnCartPage);
+		Assert.assertEquals(singlePriceOnShopPage, singlePriceOnCartPage);
+		Assert.assertEquals(totalProductPriceOnShopPage, totalProductPriceOnCartPage);
+		extentTest.get().log(Status.PASS, "Price Matched for Valentine Bear");
+		totalAmount = totalAmount + totalProductPriceOnCartPage;
+		// Resetting values
+		isAddedToCart = false;
+		singlePriceOnShopPage = 0.0;
+		totalProductPriceOnShopPage = 0.0;
+		singlePriceOnCartPage = 0.0;
+		totalProductPriceOnCartPage = 0.0;
+		
+		// Verify total amount on cart
+		Assert.assertEquals(cartPage.getCartTotal(), totalAmount);
+		extentTest.get().log(Status.PASS, "Total price matched which is: "+totalAmount);
+	
 	}
 }

@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 public class ShopPage extends BasePage{
 
 	int count = 0;
-	double productQty = 0.0;
+	int productQty = 0;
 	double amount = 0.0;
 	private By products = By.xpath("//h4");
 	private By productPrice = null;
